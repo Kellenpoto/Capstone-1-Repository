@@ -23,8 +23,8 @@ teams = ['LV', 'MIN', 'TB', 'ARI', 'DEN', 'MIA', 'NYJ', 'CLE', 'NYG',   # List o
        'BAL', 'CIN', 'HOU', 'CHI', 'IND', 'PIT', 'DAL', 'WAS', 'SEA',
        'LA', 'CAR', 'TEN', 'BUF', 'KC', 'GB', 'ATL', 'NE', 'JAX', 'SF',
        'LAC', 'PHI', 'DET', 'NO']
-Is_list = ['IsRush', 'IsPass', 'IsIncomplete', 'IsTouchdown', 'IsSack', 'IsChallenge', 'IsChallengeReversed', 'IsMeasurement', 'IsInterception', #Stats starting with IS
-    'IsFumble', 'IsPenalty', 'IsTwoPointConversion', 'IsTwoPointConversionSuccessful', 'IsPenaltyAccepted', 'IsNoPlay']
+Is_list = ['IsRush', 'IsPass', 'IsIncomplete', 'IsTouchdown', 'IsSack', 'IsChallenge', 'IsChallengeReversed', 'IsInterception', #Stats starting with IS
+    'IsFumble', 'IsPenalty', 'IsTwoPointConversion', 'IsTwoPointConversionSuccessful', 'IsPenaltyAccepted', 'IsNoPlay', 'IsSuccess']
 formations = ['UNDER CENTER', 'SHOTGUN', 'NO HUDDLE SHOTGUN', 'NO HUDDLE']
 
 # Helper Functions   
@@ -41,8 +41,8 @@ def is_success(row):
  
 def compare_team_is_stats(stat1, stat2):
     '''Plot a comparison between two stats starting with "Is" for each team. Is stats include: ['IsRush', 'IsPass',
-    'IsIncomplete', 'IsTouchdown', 'IsSack', 'IsChallenge', 'IsChallengeReversed', 'IsMeasurement', 'IsInterception',
-    'IsFumble', 'IsPenalty', 'IsTwoPointConversion', 'IsTwoPointConversionSuccessful', 'IsPenaltyAccepted', 'IsNoPlay']'''
+    'IsIncomplete', 'IsTouchdown', 'IsSack', 'IsChallenge', 'IsChallengeReversed', 'IsInterception', 'IsFumble',
+    'IsPenalty', 'IsTwoPointConversion', 'IsTwoPointConversionSuccessful', 'IsPenaltyAccepted', 'IsNoPlay', 'IsSuccess]'''
 
     stat1_df = df.groupby('OffenseTeam').sum().sort_values(stat1, ascending=False)[stat1]
     stat2_df = df.groupby('OffenseTeam').sum().sort_values(stat2, ascending=False)[stat2]
