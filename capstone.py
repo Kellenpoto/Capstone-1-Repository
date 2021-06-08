@@ -53,9 +53,9 @@ def compare_team_is_stats(stat1, stat2):
     p_stat2 = p.plural(stat2[2:])
     fig, ax = plt.subplots()
     ax.scatter(x,y)
-    ax.set_xlabel(p_stat1)
-    ax.set_ylabel(p_stat2)
-    ax.set_title(f'{p_stat1} VS {p_stat2}')
+    ax.set_xlabel(p.plural(p_stat1[2:]))
+    ax.set_ylabel(p.plural(p_stat2[2:]))
+    ax.set_title(f'{p.plural(p_stat1[2:])} VS {p.plural(p_stat2[2:])}')
     for i, _x in enumerate(list(x)):
         ax.annotate(x.keys()[i], (_x,y[i]))
     fig.tight_layout()
@@ -101,7 +101,7 @@ def stat_by_formation(stat, team):
     if stat not in Is_list:
         temp_rush_plays = rush_plays[rush_plays['OffenseTeam']==team]
         temp_pass_plays = pass_plays[pass_plays['OffenseTeam']==team]
-        fig, axs = plt.subplots(1,3)
+        fig, axs = plt.subplots(1,4)
         x= np.arange(4)
         for i, ax in enumerate(axs.flatten()):
             temp_r = temp_rush_plays[temp_rush_plays['Down'] == i+1]
