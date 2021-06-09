@@ -201,4 +201,38 @@ def get_success_rates(team):
         success_rates[f'Down {i} Passes'] = success_rate_pass
     return success_rates
 
+def get_beta_dist(team):
+    '''This function receives a team abbreviation and returns a beta distribution for the success rate of rush and pass plays. Returns tuple like (beta_rush, 
+    beta_pass, probability that passing will be more successful than rushing)'''
+    temp_rush_plays = rush_plays[rush_plays['OffenseTeam']==team]
+    temp_pass_plays = pass_plays[pass_plays['OffenseTeam']==team]
+    rush_a = temp_rush_plays['IsSuccess'].sum()
+    rush_b = temp_rush_plays['IsSuccess'].count() - rush_a
+    pass_a = temp_pass_plays['IsSuccess'].sum()
+    pass_b = temp_pass_plays['IsSuccess'].count() - pass_a
+    return stats.beta(rush_a+1,rush_b+1), stats.beta(pass_a+1,pass_b+1)
+
+def graph_beta_dist(team):
+    posterior_r = get_beta_dist(team)[0]
+    posterior_p = get_beta_dist(team)[1]
+    x = np.linspace(0,1,1000)
+    fig, ax = plt.subplots()
+    ax.plot(x, posterior_r.pdf(x), color='red')
+    ax.plot(x, posterior_p.pdf(x), color='blue')
+    ax.set_xlabel('Probability')
+    ax.set_ylabel('Probability Density')
+    ax.set_title(f'Beta Distributions for {team}')
+    ax.set_ylim(ymin=0)
+    fig.savefig(f'images/RushPassDistributions/RushPassDistribution{team}')
+
+def get_beta_dist_league():
+    '''This function receives a team abbreviation and returns a binomial distribution for the success rate of rush and pass plays. Returns tuple like (beta_rush,         beta_pass)'''
+    rush_a = rush_plays['IsSuccess'].sum()
+    rush_b = rush_plays['IsSuccess'].count() - rush_a
+    pass_a = pass_plays['IsSuccess'].sum()
+    pass_b = pass_plays['IsSuccess'].count() - pass_a
+    rush_beta = stats.beta(rush_a+1,rush_b+1)
+    pass_beta =stats.beta(pass_a+1,pass_b+1)
+    return stats.beta(rush_a+1,rush_b+1), stats.beta(pass_a+1,pass_b+1), (pass_beta.rvs(size=100000) > rush_beta.rvs(size=100000)).mean()
+
 
