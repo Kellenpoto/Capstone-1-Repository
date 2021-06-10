@@ -53,14 +53,14 @@ def compare_team_is_stats(stat1, stat2):
     p_stat2 = p.plural(stat2[2:])
     fig, ax = plt.subplots()
     ax.scatter(x,y)
-    ax.set_xlabel(p.plural(p_stat1[2:]))
-    ax.set_ylabel(p.plural(p_stat2[2:]))
-    ax.set_title(f'{p.plural(p_stat1[2:])} VS {p.plural(p_stat2[2:])}')
+    ax.set_xlabel(p_stat1)
+    ax.set_ylabel(p_stat2)
+    ax.set_title(f'{p_stat1} VS {p_stat2}')
     for i, _x in enumerate(list(x)):
         ax.annotate(x.keys()[i], (_x,y[i]))
     fig.tight_layout()
     fig.set_size_inches(12,6)
-    # fig.savefig(f'images/{stat1}VS{stat2}PerTeam')
+    fig.savefig(f'images/{p_stat1}VS{p_stat2}PerTeam')
     return fig.show()
 
 def avg_yards_by_down(team):
@@ -210,7 +210,9 @@ def get_beta_dist(team):
     rush_b = temp_rush_plays['IsSuccess'].count() - rush_a
     pass_a = temp_pass_plays['IsSuccess'].sum()
     pass_b = temp_pass_plays['IsSuccess'].count() - pass_a
-    return stats.beta(rush_a+1,rush_b+1), stats.beta(pass_a+1,pass_b+1)
+    rush_beta = stats.beta(rush_a+1,rush_b+1)
+    pass_beta = stats.beta(pass_a+1,pass_b+1)
+    return rush_beta, pass_beta
 
 def graph_beta_dist(team):
     posterior_r = get_beta_dist(team)[0]
@@ -235,4 +237,84 @@ def get_beta_dist_league():
     pass_beta =stats.beta(pass_a+1,pass_b+1)
     return stats.beta(rush_a+1,rush_b+1), stats.beta(pass_a+1,pass_b+1), (pass_beta.rvs(size=100000) > rush_beta.rvs(size=100000)).mean()
 
+def get_pval(team):
+    '''This function reveives a team abbreviation and returns the pvalue for the null hypothesis that run and pass plays are equally successful.'''
+    temp_rush_plays = rush_plays[rush_plays['OffenseTeam']==team]
+    temp_pass_plays = pass_plays[pass_plays['OffenseTeam']==team]
+    r = temp_rush_plays['IsSuccess']
+    p = temp_pass_plays['IsSuccess']
+    return stats.ttest_ind(r,p)[1]
 
+def graph_confidence_interval():
+    r_successes = rush_plays['IsSuccess'].sum()
+    r_attempts = rush_plays['IsSuccess'].count()
+    p_successes = pass_plays['IsSuccess'].sum()
+    p_attempts = pass_plays['IsSuccess'].count()
+    difference = (p_successes/p_attempts) - (r_successes/r_attempts)
+    total_plays = r_attempts + p_attempts
+    shared_sample_freq = (r_successes + p_successes) / total_plays
+    shared_sample_var = total_plays * (shared_sample_freq * (1-shared_sample_freq)) / (r_attempts * p_attempts)
+    difference_in_proportions = stats.norm(0, np.sqrt(shared_sample_var))
+    fig, ax = plt.subplots()
+    x = np.linspace(-1, 1, 10000)
+    ax.plot(x, difference_in_proportions.pdf(x), linewidth=2)
+    ax.set_xlim(-.05,.05)
+    ax.set_xlabel('Difference in Proportions')
+    ax.set_ylabel('Probability Density')
+    ax.set_title('Probability Density Under $H_0$')
+    ax.fill_between(x, difference_in_proportions.pdf(x), where=(x>=difference))
+    fig.set_size_inches(6,3)
+    fig.tight_layout()
+    # fig.savefig('images/Probability Density Under H_0')
+    return fig.show()
+
+def graph_confidence_interval_team(team):
+    temp_rush_plays = rush_plays[rush_plays['OffenseTeam']==team]
+    temp_pass_plays = pass_plays[pass_plays['OffenseTeam']==team]
+    r_successes = temp_rush_plays['IsSuccess'].sum()
+    r_attempts = temp_rush_plays['IsSuccess'].count()
+    p_successes = temp_pass_plays['IsSuccess'].sum()
+    p_attempts = temp_pass_plays['IsSuccess'].count()
+    difference = (p_successes/p_attempts)-(r_successes/r_attempts)
+    print(difference)
+    total_plays = r_attempts + p_attempts
+    shared_sample_freq = (r_successes + p_successes) / total_plays
+    shared_sample_var = total_plays * (shared_sample_freq * (1-shared_sample_freq)) / (r_attempts * p_attempts)
+    difference_in_proportions = stats.norm(0, np.sqrt(shared_sample_var))
+    fig, ax = plt.subplots()
+    x = np.linspace(-1, 1, 10000)
+    ax.plot(x, difference_in_proportions.pdf(x), linewidth=2)
+    ax.set_xlim(-.15,.15)
+    ax.set_xlabel('Difference in Proportions')
+    ax.set_ylabel('Probability Density')
+    ax.set_title(f'Probability Density Under $H_0$ for {team}')
+    ax.fill_between(x, difference_in_proportions.pdf(x), where=(x>=difference))
+    fig.set_size_inches(6,3)
+    fig.tight_layout()
+    # fig.savefig('images/Probability Density Under H_0 for {team}')
+    return fig.show()
+
+def league_box():
+    '''This function generates graphs for the average yards gained for run and pass plays for each down,
+    the total amount of run and pass plays per down, and the success rate of run and pass plays per down.'''
+    all_rushes = [rush_plays[rush_plays['Down']==i]['Yards'] for i in range(1,5)]
+    all_passes = [pass_plays[pass_plays['Down']==i]['Yards'] for i in range(1,5)]
+
+    fig, ax = plt.subplots()
+ 
+    x = np.array([1,2,3,4])
+    y = np.linspace(-20,100,13)
+    ax.boxplot(all_rushes, positions = x-.2, widths=.25)
+
+    ax.boxplot(all_passes, positions = x+.2, widths=.25)
+    ax.set_xlabel('Down')
+    ax.set_ylabel('Yards')
+    ax.set_xticks(x)
+    ax.set_yticks(y)
+    ax.set_xticklabels([1,2,3,4])
+    ax.set_title(f'Average Yards per Down')
+
+    fig.set_size_inches(12,6)
+    fig.tight_layout()
+    fig.savefig('images/BoxPlot')
+    return fig.show()
