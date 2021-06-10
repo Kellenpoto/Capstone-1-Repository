@@ -182,7 +182,6 @@ def success_rate_by_down_and_formation(team):
         ax.set_ylim(0,1)
         ax.set_title(f'Success % Down {i+1}: {team}')
     axs[0].set_ylabel('Success Rate')
-    ax.legend()
     fig.set_size_inches(12,4)
     fig.tight_layout()
     # return fig.show()
