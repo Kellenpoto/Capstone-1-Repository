@@ -27,4 +27,4 @@ Another way to vizualize the success of run and pass plays is to at the beta dis
 <p float='center'>
 <img width="400" src='images/RushPassDistributions/RushPassDistributionKC.png'><img width="400" src='images/RushPassDistributions/RushPassDistributionBUF.png'><img width="400" src='images/RushPassDistributions/RushPassDistributionTEN.png'><img width="400" src='images/RushPassDistributions/RushPassDistributionMIN.png'>
 </p>
-The top four offenses differ in offensive philosophy pretty significantly. The two teams on top run pass heavy offenses more common to todays game, while the lower two rely on workhorse runningbacks to propell their offenses.
+The top four offenses differ in offensive philosophy pretty significantly. The two teams on top utilize pass heavy offenses more common to todays game, while the lower two rely on workhorse runningbacks to propell their offenses.
