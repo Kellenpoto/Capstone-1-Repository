@@ -1,4 +1,4 @@
-# Passing VS Running Success in the NLF
+# Passing VS Running Success in the NFL
 
 ## The Face of the NFL is Changing
 In recent years with the emergence of several young and talented quarterbacks, NFL pundits and coaches have advanced the claim that "This is a passing league". With the success of teams like Green Bay, Tampa Bay, and Kansas City, there is plenty of annecdotal evidence to support this. From a fan standpoint, the modern day high-flying NFL is absolutely captivating and more volitile than ever, but is there statistical evidence to support this league wide shift in offensive philsophy?
