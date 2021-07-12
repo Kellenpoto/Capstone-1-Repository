@@ -41,7 +41,7 @@ Because there are 33 different tests being conducted simultaneously from the sam
   <img src='images/Probability Density Under H_0.png'>
 </p>
 
-Only the Houston Texans managed to reject the null hypothesis with a P-Value of .00028, which is below our adjusted alpha of .00061. The shaded region starts at .12 and is effectively invisible in this graph, giving us visual confirmation of of our statistically significant P-Value.
+Only the Houston Texans managed to reject the null hypothesis with a P-Value of .00028, which is below our adjusted alpha of .00061. The shaded region starts at .12 and is effectively invisible in this graph, giving us visual confirmation of of our statistically significant P-Value. Under Bayesian testing, there is a 99.9% chance that pass plays are more successful than run plays. From a visual standpoint, the two beta curves have practically no overlap.
 
 <p align='center'>
   <img src='images/Probability Density Under H_0 for HOU.png'> <img width='400' src='images/RushPassDistributions/RushPassDistributionHOU.png'> 
